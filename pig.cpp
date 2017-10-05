@@ -5,14 +5,15 @@
 
 #include <iostream>
 #include <regex>
+#include <cstring>
 
 
 using namespace std;
 
 
+void disectSentence (char *sentence);
 void getSentence    (char *sentence);
 void translate      (char *word);
-void disectSentence (char *sentence);
 bool verifyWord     (char *sentence);
 
 
@@ -20,33 +21,28 @@ void disectSentence(char *sentence)
 // parses a sentence looking for words, verifies the ones found, then translates
 // them as need
 {
-    int wordBeg, wordEnd = 0;
-    
+    cout << "DEBUG: sentence = " << sentence << endl;
 
-    while( wordBeg < strlen(sentence))
+    char * word;
+
+    word = strtok(sentence, " ,.-");
+
+    while(word != NULL)
     {
-        for( ; wordBeg++)
-        {
-            cout << "DEBUG: wordBeg at " << wordBeg << endl
-        }
-
-        wordEnd = wordBeg;
-
-        for((wordEnd != ' ' || wordEnd != '\t'); wordEnd++)
-        {
-        
-            cout << "DEBUG: wordEnd at " << wordEnd << endl;
-        }
-
-        cout << "DEBUG: word found between [" << wordBeg << ":" << wordEnd << "]: " sentence[wordBeg:wordEnd] << endl;
+        cout << "DEBUG: word found --> " << word << endl;
+        word = strtok(NULL, " ,.-");
     }
+}
 
 bool verifyWord(char *word)
 {
     regex wordRegex("[^aeiou]\\w{2}\\w+");
-    regex blackList("the|")
+    regex blackList("the|\\w+\\'\\w+");
 
-    bool match = regex_match(word, wordRegex);
+    bool match = false; 
+
+    if(regex_match(word, wordRegex) && regex_match(word, blackList))
+        match = true;
 
     return match;
 }
@@ -87,7 +83,8 @@ int main ()
         cout << "\nEntering getSentence" << endl;
         getSentence(sentence);
 
-        cout << "\nEntering verifyWord" << endl;
+        cout << "\nEntering disectSentence" << endl;
+        disectSentence(sentence);
 
     } while( exit == false);
 }
