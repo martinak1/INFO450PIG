@@ -10,23 +10,45 @@
 using namespace std;
 
 
-void bisectSentence (char *sentence);
 void getSentence    (char *sentence);
 void translate      (char *word);
+void disectSentence (char *sentence);
+bool verifyWord     (char *sentence);
 
 
-void bisectSentence(char *sentence)
+void disectSentence(char *sentence)
+// parses a sentence looking for words, verifies the ones found, then translates
+// them as need
 {
-    regex wordRegex("\\w{2}\\w+");
-    cmatch matches;
+    int wordBeg, wordEnd = 0;
+    
 
-    regex_search(sentence, matches, wordRegex);
-
-    for(size_t i = 0; i < matches.size(); i++)
+    while( wordBeg < strlen(sentence))
     {
-        cout << i << " word found: " << matches[i] << " translated: " << endl;
+        for( ; wordBeg++)
+        {
+            cout << "DEBUG: wordBeg at " << wordBeg << endl
+        }
+
+        wordEnd = wordBeg;
+
+        for((wordEnd != ' ' || wordEnd != '\t'); wordEnd++)
+        {
+        
+            cout << "DEBUG: wordEnd at " << wordEnd << endl;
+        }
+
+        cout << "DEBUG: word found between [" << wordBeg << ":" << wordEnd << "]: " sentence[wordBeg:wordEnd] << endl;
     }
 
+bool verifyWord(char *word)
+{
+    regex wordRegex("[^aeiou]\\w{2}\\w+");
+    regex blackList("the|")
+
+    bool match = regex_match(word, wordRegex);
+
+    return match;
 }
 
 
@@ -41,10 +63,6 @@ void getSentence(char *sentence)
 
 
     strcpy(sentence, input);
-    //debug
-    //cout << "DEBUG: sentence = " << sentence << " *sentence = " << *sentence
-    //  << endl;
-    //cout << "DEBUG: input = " << input << " *input = " << *input << endl;
 }
 
 
@@ -68,13 +86,8 @@ int main ()
     {
         cout << "\nEntering getSentence" << endl;
         getSentence(sentence);
-        // debug
-        //cout << "SENTENCE = " << sentence << endl;
-        //cout << "&SENTENCE = " << &sentence << endl;
-        //cout << "*SENTENCE = " << *sentence << endl;
 
-        cout << "\nEntering bisectWords" << endl;
-        bisectSentence(sentence);
+        cout << "\nEntering verifyWord" << endl;
 
     } while( exit == false);
 }
