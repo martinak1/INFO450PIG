@@ -21,16 +21,26 @@ void disectSentence(char *sentence)
 // parses a sentence looking for words, verifies the ones found, then translates
 // them as need
 {
-    cout << "DEBUG: sentence = " << sentence << endl;
+    //cout << "DEBUG: sentence = " << sentence << endl;
 
     char * word;
 
-    word = strtok(sentence, " ,.-");
+    word = strtok(sentence, " ,.-!@#$%^&*()_+-={[]}|\\<>");
 
     while(word != NULL)
     {
-        cout << "DEBUG: word found --> " << word << endl;
-        word = strtok(NULL, " ,.-");
+        //cout << "DEBUG: word found --> " << word << endl;
+
+        if(verifyWord(word))
+        {     
+            translate(word);
+        }
+        else
+        {
+            cout << word << " ";
+        }
+
+        word = strtok(NULL, " ,.-!@#$%^&*()_+-={[]}|\\<>");
     }
 }
 
@@ -41,9 +51,13 @@ bool verifyWord(char *word)
 
     bool match = false; 
 
-    if(regex_match(word, wordRegex) && regex_match(word, blackList))
+    if(regex_match(word, wordRegex) && !(regex_match(word, blackList)))
+    {
         match = true;
+        //cout << "DEBUG: match = " << boolalpha << match << endl;
+    }
 
+    //cout << "DEBUG: returning match = " << boolalpha << match << endl;
     return match;
 }
 
@@ -53,7 +67,7 @@ void getSentence(char *sentence)
 {
 
     char input[500]; 
-    cout << "What is the sentence you would like to translate "
+    cout << "\n\nWhat is the sentence you would like to translate "
          << "(max 500 characters)? Enter 'exit' to quit." << endl;
     cin.getline(input, 500);
 
@@ -69,7 +83,7 @@ void translate(char *word)
 
     for(int i = 1; i < strlen(word); i++)
        cout << word[i];
-    cout << word[0] << "ay";
+    cout << word[0] << "ay ";
 }
 
 
@@ -80,11 +94,13 @@ int main ()
 
     do
     {
-        cout << "\nEntering getSentence" << endl;
+        //cout << "\nEntering getSentence" << endl;
         getSentence(sentence);
 
-        cout << "\nEntering disectSentence" << endl;
+        //cout << "\nEntering disectSentence" << endl;
         disectSentence(sentence);
+
+        cout << '\n' << endl;
 
     } while( exit == false);
 }
