@@ -25,12 +25,12 @@ void disectSentence(char *sentence)
 
     char * word;
 
-    word = strtok(sentence, " ");   //" ,.-!@#$%^&*()_+-={[]}|\\<>"
+    word = strtok(sentence, " ");   
+
+    cout << "\nTranslated:\n " << endl;
 
     while(word != NULL)
     {
-        //cout << "DEBUG: word found --> " << word << endl;
-
         if(verifyWord(word))
         {     
             translate(word);
@@ -45,30 +45,29 @@ void disectSentence(char *sentence)
 }
 
 bool verifyWord(char *word)
+// determins if a word needs to be translated or not
+// called in disectSentence
 {
+    // regex that matches words starting with consenants 
     regex wordRegex("[^aeiou]\\w{2}\\w+[,.!\\?]?");
     regex blackList("the|\\w+\\'\\w+");
 
     bool match = false; 
 
     if(regex_match(word, wordRegex) && !(regex_match(word, blackList)))
-    {
         match = true;
-        //cout << "DEBUG: match = " << boolalpha << match << endl;
-    }
 
-    //cout << "DEBUG: returning match = " << boolalpha << match << endl;
     return match;
 }
 
 
 void getSentence(char *sentence)
-// this funciton takes in user input and assign a pointer to it
+// handels user input
 {
 
     char input[500]; 
     cout << "\n\nWhat is the sentence you would like to translate "
-         << "(max 500 characters)? Enter 'exit' to quit." << endl;
+         << "(max 500 characters)? Enter '0' to quit." << "\n\nOriginal:\n" <<endl;
     cin.getline(input, 500);
 
 
@@ -77,6 +76,8 @@ void getSentence(char *sentence)
 
 
 void translate(char *word)
+// translates words to piglatin and keeps the appropriate punctuation
+// called in disectSentence
 {
     switch(word[strlen(word)-1])
     {
@@ -84,12 +85,12 @@ void translate(char *word)
         case '.':
         case '?':
         case '!':
+        case ';':
+        case ':':
             {
-                char ending[] = {word[strlen(word)-1]};
-
                 for(int i = 1; i < strlen(word) - 1; i++)
                     cout << word[i];
-                cout << word[0] << "ay" << ending << " ";
+                cout << word[0] << "ay" << word[strlen(word)-1] << " ";
                 break;
             }
         default:
@@ -108,18 +109,18 @@ int main ()
 
     do
     {
-        //cout << "\nEntering getSentence" << endl;
+        // handle user input
         getSentence(sentence);
 
-        if(sentence == "exit")
+        // exit condition
+        if(sentence[0] == '0')
             break;
 
-        //cout << "\nEntering disectSentence" << endl;
+        // parse sentence and translate as needed
         disectSentence(sentence);
 
-        cout << '\n' << endl;
-
-    } while( exit == false);
+    } while(true);
 
     cout << "\nExiting!" << endl;
+    return 0;
 }
