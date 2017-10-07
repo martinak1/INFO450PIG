@@ -37,10 +37,8 @@ psudo code:
         
         prompt for sentance
         parse string for words
-        add words to the array 
-        translate qualifying word
-        form new string with translated words
-        print string 
+        translate qualifying words
+        print the words
         check if user wants to exit
     
     cleanup 

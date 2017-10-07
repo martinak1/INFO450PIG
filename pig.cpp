@@ -3,16 +3,17 @@
  * updated: 6 Oct
  */
 
+#include <cstring>
+#include <exception>
 #include <iostream>
 #include <regex>
-#include <cstring>
 
 
 using namespace std;
 
 
 void disectSentence (char *sentence);
-void getSentence    (char *sentence);
+int  getSentence    (char *sentence);
 void translate      (char *word);
 bool verifyWord     (char *sentence);
 
@@ -48,9 +49,9 @@ bool verifyWord(char *word)
 // determins if a word needs to be translated or not
 // called in disectSentence
 {
-    // regex that matches words starting with consenants 
-    regex wordRegex("[^aeiou]\\w{2}\\w+[,.!\\?]?");
-    regex blackList("the|\\w+\\'\\w+");
+    // regex that matches words without non-standard punctuation
+    regex wordRegex("[a-zA-Z]{2}\\w+[,.!?;:]?");
+    regex blackList("the|and|but|for|nor|yet|\\w+\\'\\w+");
 
     bool match = false; 
 
@@ -61,17 +62,25 @@ bool verifyWord(char *word)
 }
 
 
-void getSentence(char *sentence)
+int getSentence(char *sentence)
 // handels user input
 {
 
     char input[500]; 
     cout << "\n\nWhat is the sentence you would like to translate "
          << "(max 500 characters)? Enter '0' to quit." << "\n\nOriginal:\n" <<endl;
-    cin.getline(input, 500);
-
+    try
+    {
+        cin.getline(input, 500);
+    }
+    catch(exception& e)
+    {
+        cout << "[ERROR] - " << e.what() << endl;
+        return -1;
+    }
 
     strcpy(sentence, input);
+    return 0;
 }
 
 
@@ -79,25 +88,49 @@ void translate(char *word)
 // translates words to piglatin and keeps the appropriate punctuation
 // called in disectSentence
 {
-    switch(word[strlen(word)-1])
+    regex startsWithVowel("[aeiouAEIOU]+\\w+[!.,:;?]?");
+
+    if(regex_match(word, startsWithVowel))
     {
-        case ',':
-        case '.':
-        case '?':
-        case '!':
-        case ';':
-        case ':':
-            {
+        switch(word[strlen(word)-1])
+        {
+            case ',':
+            case '.':
+            case '?':
+            case '!':
+            case ';':
+            case ':':
+                for(int i = 0; i < strlen(word) - 1; i++)
+                    cout << word[i];
+                cout << "ay" << word[strlen(word)-1] << " ";
+                break;
+            default:
+                for(int i = 0; i < strlen(word); i++)
+                    cout << word[i];
+                cout << "ay ";
+                break;
+        }
+    }
+    else
+    {
+        switch(word[strlen(word)-1])
+        {
+            case ',':
+            case '.':
+            case '?':
+            case '!':
+            case ';':
+            case ':':
                 for(int i = 1; i < strlen(word) - 1; i++)
                     cout << word[i];
                 cout << word[0] << "ay" << word[strlen(word)-1] << " ";
                 break;
-            }
-        default:
-            for(int i = 1; i < strlen(word); i++)
-                cout << word[i];
-            cout << word[0] << "ay ";
-            break;
+            default:
+                for(int i = 1; i < strlen(word); i++)
+                    cout << word[i];
+                cout << word[0] << "ay ";
+                break;
+        }
     }
 }
 
@@ -110,7 +143,8 @@ int main ()
     do
     {
         // handle user input
-        getSentence(sentence);
+       if(getSentence(sentence))
+            return -1;
 
         // exit condition
         if(sentence[0] == '0')
