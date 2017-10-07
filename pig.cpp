@@ -1,6 +1,6 @@
-/* INFO450PIG.cpp - This program takes in sentences and translates them to
- * piglatin
- * updated: 27 sep
+/* INFO450PIG.cpp - This program takes in sentences 500 characters long and 
+ *                  translates them to piglatin
+ * updated: 6 Oct
  */
 
 #include <iostream>
@@ -25,7 +25,7 @@ void disectSentence(char *sentence)
 
     char * word;
 
-    word = strtok(sentence, " ,.-!@#$%^&*()_+-={[]}|\\<>");
+    word = strtok(sentence, " ");   //" ,.-!@#$%^&*()_+-={[]}|\\<>"
 
     while(word != NULL)
     {
@@ -40,13 +40,13 @@ void disectSentence(char *sentence)
             cout << word << " ";
         }
 
-        word = strtok(NULL, " ,.-!@#$%^&*()_+-={[]}|\\<>");
+        word = strtok(NULL, " ");
     }
 }
 
 bool verifyWord(char *word)
 {
-    regex wordRegex("[^aeiou]\\w{2}\\w+");
+    regex wordRegex("[^aeiou]\\w{2}\\w+[,.!\\?]?");
     regex blackList("the|\\w+\\'\\w+");
 
     bool match = false; 
@@ -78,12 +78,26 @@ void getSentence(char *sentence)
 
 void translate(char *word)
 {
-    char* firstLetter;
-    char ending[] = "ay";
+    switch(word[strlen(word)-1])
+    {
+        case ',':
+        case '.':
+        case '?':
+        case '!':
+            {
+                char ending[] = {word[strlen(word)-1]};
 
-    for(int i = 1; i < strlen(word); i++)
-       cout << word[i];
-    cout << word[0] << "ay ";
+                for(int i = 1; i < strlen(word) - 1; i++)
+                    cout << word[i];
+                cout << word[0] << "ay" << ending << " ";
+                break;
+            }
+        default:
+            for(int i = 1; i < strlen(word); i++)
+                cout << word[i];
+            cout << word[0] << "ay ";
+            break;
+    }
 }
 
 
@@ -97,10 +111,15 @@ int main ()
         //cout << "\nEntering getSentence" << endl;
         getSentence(sentence);
 
+        if(sentence == "exit")
+            break;
+
         //cout << "\nEntering disectSentence" << endl;
         disectSentence(sentence);
 
         cout << '\n' << endl;
 
     } while( exit == false);
+
+    cout << "\nExiting!" << endl;
 }
