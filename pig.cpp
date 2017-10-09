@@ -1,10 +1,10 @@
 /* INFO450PIG.cpp - This program takes in sentences 500 characters long and 
  *                  translates them to piglatin
- * updated: 6 Oct
+ * updated: 9 Oct
  */
 
 #include <cstring>
-#include <exception>
+#include <cstdio>
 #include <iostream>
 #include <regex>
 
@@ -13,7 +13,7 @@ using namespace std;
 
 
 void disectSentence (char *sentence);
-int  getSentence    (char *sentence);
+void getSentence    (char *sentence);
 void translate      (char *word);
 bool verifyWord     (char *sentence);
 
@@ -22,10 +22,7 @@ void disectSentence(char *sentence)
 // parses a sentence looking for words, verifies the ones found, then translates
 // them as need
 {
-    //cout << "DEBUG: sentence = " << sentence << endl;
-
-    char * word;
-
+    char *word;
     word = strtok(sentence, " ");   
 
     cout << "\nTranslated:\n " << endl;
@@ -62,25 +59,17 @@ bool verifyWord(char *word)
 }
 
 
-int getSentence(char *sentence)
+void getSentence(char *sentence)
 // handels user input
 {
 
-    char input[500]; 
+    char input[501]; 
     cout << "\n\nWhat is the sentence you would like to translate "
          << "(max 500 characters)? Enter '0' to quit." << "\n\nOriginal:\n" <<endl;
-    try
-    {
-        cin.getline(input, 500);
-    }
-    catch(exception& e)
-    {
-        cout << "[ERROR] - " << e.what() << endl;
-        return -1;
-    }
 
+    fgets(input, 501, stdin);
     strcpy(sentence, input);
-    return 0;
+    return;
 }
 
 
@@ -91,6 +80,7 @@ void translate(char *word)
     regex startsWithVowel("[aeiouAEIOU]+\\w+[!.,:;?]?");
 
     if(regex_match(word, startsWithVowel))
+    // true if word starts with a-zA-Z
     {
         switch(word[strlen(word)-1])
         {
@@ -143,7 +133,9 @@ int main ()
     do
     {
         // handle user input
-       if(getSentence(sentence))
+        getSentence(sentence);
+
+       if(sentence == NULL)
             return -1;
 
         // exit condition
