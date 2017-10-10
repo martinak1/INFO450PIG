@@ -23,7 +23,7 @@ void disectSentence(char *sentence)
 // them as need
 {
     char *word;
-    word = strtok(sentence, " ");   
+    word = strtok(sentence, " \n\r\0\t");   
 
     cout << "\nTranslated:\n " << endl;
 
@@ -38,7 +38,7 @@ void disectSentence(char *sentence)
             cout << word << " ";
         }
 
-        word = strtok(NULL, " ");
+        word = strtok(NULL, " \n\r\0\t");
     }
 }
 
@@ -47,7 +47,7 @@ bool verifyWord(char *word)
 // called in disectSentence
 {
     // regex that matches words without non-standard punctuation
-    regex wordRegex("[a-zA-Z]{2}\\w+[,.!?;:]?");
+    regex wordRegex("^[a-zA-Z]{2}\\w+[,.!?;:]?$");
     regex blackList("the|and|but|for|nor|yet|\\w+\\'\\w+");
 
     bool match = false; 
@@ -80,7 +80,7 @@ void translate(char *word)
     regex startsWithVowel("[aeiouAEIOU]+\\w+[!.,:;?]?");
 
     if(regex_match(word, startsWithVowel))
-    // true if word starts with a-zA-Z
+        // true if word starts with a-zA-Z
     {
         switch(word[strlen(word)-1])
         {
@@ -127,6 +127,7 @@ void translate(char *word)
 
 int main ()
 {
+    // this bool does nothing, but when I delete it, there is a segment fault
     bool exit = false;
     char *sentence;
 
