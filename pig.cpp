@@ -1,6 +1,6 @@
 /* INFO450PIG.cpp - This program takes in sentences 500 characters long and 
  *                  translates them to piglatin
- * updated: 9 Oct
+ * updated: 11 Oct
  */
 
 #include <cstring>
@@ -18,20 +18,26 @@ bool verifyWord     (char *sentence);
 
 
 void disectSentence(char *sentence)
-// parses a sentence looking for words, verifies the ones found, then translates
-// them as need
+/* parses a sentence looking for words, verifies the ones found, then translates
+ * them as need
+ * called in main
+ */
 {
     char *word;
+    
+    // split on white space or NULL
     word = strtok(sentence, " \n\r\0\t");   
 
     cout << "\nTranslated:\n " << endl;
 
+    // while one or more tokens exits verify -> translate each
     while(word != NULL)
     {
         if(verifyWord(word))
         {     
             translate(word);
         }
+        // print invalid words as is and move on
         else
         {
             cout << word << " ";
@@ -41,32 +47,16 @@ void disectSentence(char *sentence)
     }
 }
 
-bool verifyWord(char *word)
-// determins if a word needs to be translated or not
-// called in disectSentence
-{
-    // regex that matches words without non-standard punctuation
-    regex wordRegex("^[a-zA-Z]{2}\\w+[,.!?;:]?$");
-    regex blackList("the|and|but|for|nor|yet|\\w+\\'\\w+");
-
-    bool match = false; 
-
-    if(regex_match(word, wordRegex) && !(regex_match(word, blackList)))
-        match = true;
-
-    return match;
-}
-
 
 void getSentence(char *sentence)
 // handels user input
+// called in main
 {
-
-    char input[501]; 
+    char input[500]; 
     cout << "\n\nWhat is the sentence you would like to translate "
          << "(max 500 characters)? Enter '0' to quit." << "\n\nOriginal:\n" <<endl;
 
-    fgets(input, 501, stdin);
+    fgets(input, 500, stdin);
     strcpy(sentence, input);
     return;
 }
@@ -79,7 +69,6 @@ void translate(char *word)
     regex startsWithVowel("[aeiouAEIOU]+\\w+[!.,:;?]?");
 
     if(regex_match(word, startsWithVowel))
-        // true if word starts with a-zA-Z
     {
         switch(word[strlen(word)-1])
         {
@@ -89,11 +78,13 @@ void translate(char *word)
             case '!':
             case ';':
             case ':':
+                // starts with a vowel, ends with punctuation
                 for(int i = 0; i < strlen(word) - 1; i++)
                     cout << word[i];
                 cout << "ay" << word[strlen(word)-1] << " ";
                 break;
             default:
+                // starts with a vowel, no punctuation
                 for(int i = 0; i < strlen(word); i++)
                     cout << word[i];
                 cout << "ay ";
@@ -110,11 +101,13 @@ void translate(char *word)
             case '!':
             case ';':
             case ':':
+                // doesn't start with a vowel, has punctuation
                 for(int i = 1; i < strlen(word) - 1; i++)
                     cout << word[i];
                 cout << word[0] << "ay" << word[strlen(word)-1] << " ";
                 break;
             default:
+                // doesn't start with a vowel, no punctuation
                 for(int i = 1; i < strlen(word); i++)
                     cout << word[i];
                 cout << word[0] << "ay ";
@@ -124,19 +117,40 @@ void translate(char *word)
 }
 
 
+bool verifyWord(char *word)
+// determins if a word needs to be translated or not
+// called in disectSentence
+{
+    // regex that matches words without non-standard punctuation
+    regex wordRegex("^[a-zA-Z]{2}\\w+[,.!?;:]?$");
+    
+    // regex that matches articles, conjunctions, and banned words
+    regex blackList("the|and|but|for|nor|yet|\\w+\\[-']{1}\\w+");
+
+    bool match = false; 
+
+    // if word is syntasticlly valid and not blacklisted
+    if(regex_match(word, wordRegex) && !(regex_match(word, blackList)))
+        match = true;
+
+    return match;
+}
+
+
 int main ()
 {
-    char sentence[501];
+    char sentence[500];
 
     do
     {
         // handle user input
         getSentence(sentence);
 
-       if(sentence == NULL)
+        // if getSentence fails exit with error
+        if(sentence == NULL)
             return -1;
 
-        // exit condition
+        // check exit condition
         if(sentence[0] == '0')
             break;
 
