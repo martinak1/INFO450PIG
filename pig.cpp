@@ -4,7 +4,6 @@
  */
 
 #include <cstring>
-#include <cstdio>
 #include <iostream>
 #include <regex>
 
@@ -127,9 +126,7 @@ void translate(char *word)
 
 int main ()
 {
-    // this bool does nothing, but when I delete it, there is a segment fault
-    bool exit = false;
-    char *sentence;
+    char sentence[501];
 
     do
     {
