@@ -19,7 +19,7 @@ bool verifyWord     (char *sentence);
 
 void disectSentence(char *sentence)
 /* parses a sentence looking for words, verifies the ones found, then translates
- * them as need
+ * them as needed
  * called in main
  */
 {
@@ -67,10 +67,11 @@ void translate(char *word)
 // called in disectSentence
 {
     regex startsWithVowel("[aeiouAEIOU]+\\w+[!.,:;?]?");
+    int length = strlen(word);
 
     if(regex_match(word, startsWithVowel))
     {
-        switch(word[strlen(word)-1])
+        switch(word[length-1])
         {
             case ',':
             case '.':
@@ -79,13 +80,13 @@ void translate(char *word)
             case ';':
             case ':':
                 // starts with a vowel, ends with punctuation
-                for(int i = 0; i < strlen(word) - 1; i++)
+                for(int i = 0; i < length - 1; i++)
                     cout << word[i];
-                cout << "ay" << word[strlen(word)-1] << " ";
+                cout << "ay" << word[length-1] << " ";
                 break;
             default:
                 // starts with a vowel, no punctuation
-                for(int i = 0; i < strlen(word); i++)
+                for(int i = 0; i < length; i++)
                     cout << word[i];
                 cout << "ay ";
                 break;
@@ -93,7 +94,7 @@ void translate(char *word)
     }
     else
     {
-        switch(word[strlen(word)-1])
+        switch(word[length-1])
         {
             case ',':
             case '.':
@@ -102,13 +103,13 @@ void translate(char *word)
             case ';':
             case ':':
                 // doesn't start with a vowel, has punctuation
-                for(int i = 1; i < strlen(word) - 1; i++)
+                for(int i = 1; i < length - 1; i++)
                     cout << word[i];
-                cout << word[0] << "ay" << word[strlen(word)-1] << " ";
+                cout << word[0] << "ay" << word[length-1] << " ";
                 break;
             default:
                 // doesn't start with a vowel, no punctuation
-                for(int i = 1; i < strlen(word); i++)
+                for(int i = 1; i < length; i++)
                     cout << word[i];
                 cout << word[0] << "ay ";
                 break;
@@ -121,23 +122,20 @@ bool verifyWord(char *word)
 // determins if a word needs to be translated or not
 // called in disectSentence
 {
-    // regex that matches words without non-standard punctuation
+    // regex that matches words with typical punctuation
     regex wordRegex("^[a-zA-Z]{2}\\w+[,.!?;:]?$");
     
     // regex that matches articles, conjunctions, and banned words
     regex blackList("the|and|but|for|nor|yet|\\w+\\[-']{1}\\w+");
 
-    bool match = false; 
-
-    // if word is syntasticlly valid and not blacklisted
-    if(regex_match(word, wordRegex) && !(regex_match(word, blackList)))
-        match = true;
+    // if word is syntasticlly valid and not blacklisted then true, otherwise false
+    bool match = (regex_match(word, wordRegex) && !(regex_match(word, blackList))) ? true : false; 
 
     return match;
 }
 
 
-int main ()
+int main()
 {
     char sentence[500];
 
