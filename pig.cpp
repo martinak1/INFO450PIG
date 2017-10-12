@@ -1,5 +1,5 @@
 /* INFO450PIG.cpp - This program takes in sentences 500 characters long and 
- *                  translates them to piglatin
+ *                  translates them to Pig Latin
  * updated: 11 Oct
  */
 
@@ -49,13 +49,12 @@ void disectSentence(char *sentence)
 
 
 void getSentence(char *sentence)
-// handels user input
+// handles user input
 // called in main
 {
     char input[500]; 
     cout << "\n\nWhat is the sentence you would like to translate "
          << "(max 500 characters)? Enter '0' to quit." << "\n\nOriginal:\n" <<endl;
-
     fgets(input, 500, stdin);
     strcpy(sentence, input);
     return;
@@ -63,7 +62,7 @@ void getSentence(char *sentence)
 
 
 void translate(char *word)
-// translates words to piglatin and keeps the appropriate punctuation
+// translates a word to Pig Latin and keeps the appropriate punctuation
 // called in disectSentence
 {
     regex startsWithVowel("[aeiouAEIOU]+\\w+[!.,:;?]?");
@@ -146,7 +145,10 @@ int main()
 
         // if getSentence fails exit with error
         if(sentence == NULL)
+        {
+            cout << "\n\n**ERROR: User input was invalid, exiting!" << endl;
             return -1;
+        }
 
         // check exit condition
         if(sentence[0] == '0')
