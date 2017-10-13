@@ -13,7 +13,7 @@ using namespace std;
 
 void disectSentence (char *sentence);
 void getSentence    (char *sentence);
-void translate      (char *word);
+void translateToPigLatin      (char *word);
 bool verifyWord     (char *sentence);
 
 
@@ -35,7 +35,7 @@ void disectSentence(char *sentence)
     {
         if(verifyWord(word))
         {     
-            translate(word);
+            translateToPigLatin(word);
         }
         // print invalid words as is and move on
         else
@@ -53,7 +53,7 @@ void getSentence(char *sentence)
 // called in main
 {
     char input[500]; 
-    cout << "\n\nWhat is the sentence you would like to translate "
+    cout << "\n\nWhat is the sentence you would like to translaten "
          << "(max 500 characters)? Enter '0' to quit." << "\n\nOriginal:\n" <<endl;
     fgets(input, 500, stdin);
     strcpy(sentence, input);
@@ -61,7 +61,7 @@ void getSentence(char *sentence)
 }
 
 
-void translate(char *word)
+void translateToPigLatin(char *word)
 // translates a word to Pig Latin and keeps the appropriate punctuation
 // called in disectSentence
 {
