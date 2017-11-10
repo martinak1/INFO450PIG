@@ -125,7 +125,7 @@ bool verifyWord(char *word)
     regex wordRegex("^[a-zA-Z]{2}\\w+[,.!?;:]?$");
     
     // regex that matches articles, conjunctions, and banned words
-    regex blackList("the|and|but|for|nor|yet|\\w+\\[-']{1}\\w+");
+    regex blackList("the|and|but|for|nor|yet|\\w+[-']{1}\\w+");
 
     // if word is syntasticlly valid and not blacklisted then true, otherwise false
     bool match = (regex_match(word, wordRegex) && !(regex_match(word, blackList))) ? true : false; 

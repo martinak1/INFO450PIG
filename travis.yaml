@@ -1,1 +1,6 @@
-language: cpp
+{
+    "language": "cpp",
+    "comiler" : "gcc",
+    "os"      : "linux"
+}
+
