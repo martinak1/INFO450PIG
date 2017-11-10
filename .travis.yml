@@ -1,6 +1,6 @@
 {
     "language": "cpp",
-    "comiler" : "gcc",
+    "comiler" : "g++",
     "os"      : "linux"
 }
 
