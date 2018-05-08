@@ -1,6 +1,8 @@
 # INFO450PIG
 An INFO450 project 
 
+https://travis-ci.org/martinak1/INFO450PIG.svg?branch=master
+
 Topics Covered:  Arrays, C-Strings, functions, loops, conditional statements
 
 Functional Requirements:
